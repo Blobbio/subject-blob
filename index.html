@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUBJECT BLOB // NAME REVEAL</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at center, #1a0000 0%, #080808 45%, #000 100%);
+  color: #eee;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    #fff 4px
+  );
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+}
+
+.panel {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(5,5,5,0.94);
+  border: 1px solid #333;
+  padding: 45px;
+  box-shadow: 0 0 80px rgba(255,0,0,0.12);
+  position: relative;
+}
+
+.classified {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: 1px solid #ff2222;
+  color: #ff2222;
+  padding: 6px 10px;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  transform: rotate(2deg);
+}
+
+.top {
+  border-bottom: 1px solid #292929;
+  padding-bottom: 15px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #777;
+  letter-spacing: 2px;
+}
+
+.top span {
+  color: #ff2222;
+}
+
+h1 {
+  font-size: clamp(42px, 9vw, 82px);
+  line-height: 0.9;
+  margin: 45px 0 15px;
+  letter-spacing: -4px;
+  text-transform: uppercase;
+}
+
+h1 span {
+  display: block;
+  color: #555;
+}
+
+.subtitle {
+  color: #999;
+  line-height: 1.6;
+  max-width: 650px;
+}
+
+.subject {
+  height: 300px;
+  margin: 40px 0;
+  border: 1px solid #292929;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 49.8%,
+      rgba(255,0,0,0.12) 50%,
+      transparent 50.2%
+    ),
+    linear-gradient(
+      transparent 49.8%,
+      rgba(255,0,0,0.12) 50%,
+      transparent 50.2%
+    );
+}
+
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ff2222;
+  box-shadow: 0 0 15px #ff2222;
+  animation: scan 4s linear infinite;
+}
+
+.blob {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ff5555,
+    #b00000 45%,
+    #300000 80%
+  );
+  border-radius: 45% 55% 60% 40%;
+  box-shadow: 0 0 70px rgba(255,0,0,0.35);
+  animation: morph 7s ease-in-out infinite,
+             pulse 3s ease-in-out infinite;
+}
+
+.subject-label {
+  position: absolute;
+  text-align: center;
+  font-family: monospace;
+  font-weight: bold;
+  letter-spacing: 4px;
+  font-size: 13px;
+  text-shadow: 0 0 10px black;
+}
+
+.subject-label small {
+  display: block;
+  margin-top: 8px;
+  color: #aaa;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+.timer-title {
+  font-family: monospace;
+  color: #666;
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+.timer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.unit {
+  background: #090909;
+  border: 1px solid #292929;
+  padding: 20px 10px;
+  text-align: center;
+}
+
+.number {
+  font-family: monospace;
+  font-size: clamp(38px, 8vw, 65px);
+  font-weight: bold;
+}
+
+.unit-label {
+  color: #555;
+  font-family: monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  margin-top: 8px;
+}
+
+.release {
+  margin-top: 25px;
+  padding-top: 18px;
+  border-top: 1px solid #292929;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.release strong {
+  color: #fff;
+}
+
+.release strong span {
+  color: #ff2222;
+}
+
+.footer {
+  margin-top: 30px;
+  color: #444;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+@keyframes morph {
+  0%,100% {
+    border-radius: 45% 55% 60% 40%;
+    transform: rotate(0deg);
+  }
+
+  33% {
+    border-radius: 60% 40% 45% 55%;
+    transform: rotate(8deg);
+  }
+
+  66% {
+    border-radius: 50% 50% 40% 60%;
+    transform: rotate(-7deg);
+  }
+}
+
+@keyframes pulse {
+  0%,100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes scan {
+  0% {
+    top: -5%;
+  }
+
+  100% {
+    top: 105%;
+  }
+}
+
+.revealed .blob {
+  background: radial-gradient(
+    circle at 35% 30%,
+    white,
+    #ff2222 25%,
+    #900000 60%,
+    #250000
+  );
+}
+
+.revealed h1 span {
+  color: #ff2222;
+}
+
+@media (max-width: 600px) {
+  .panel {
+    padding: 25px;
+  }
+
+  .subject {
+    height: 240px;
+  }
+
+  .blob {
+    width: 145px;
+    height: 145px;
+  }
+
+  .release {
+    display: block;
+  }
+
+  .release div {
+    margin-bottom: 8px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <main class="panel" id="panel">
+
+    <div class="classified">
+      TOP SECRET
+    </div>
+
+    <div class="top">
+      CASE <span>SB-001</span> // CLASSIFIED
+    </div>
+
+    <h1 id="title">
+      SUBJECT BLOB
+      <span>NAME REVEAL</span>
+    </h1>
+
+    <p class="subtitle" id="subtitle">
+      Something is taking shape. The subject's identity has been classified
+      until the scheduled disclosure window.
+    </p>
+
+    <section class="subject">
+
+      <div class="scan"></div>
+
+      <div class="blob"></div>
+
+      <div class="subject-label" id="subjectLabel">
+        UNKNOWN
+        <small>SUBJECT 001</small>
+      </div>
+
+    </section>
+
+    <div class="timer-title" id="timerTitle">
+      TIME UNTIL DISCLOSURE
+    </div>
+
+    <div class="timer">
+
+      <div class="unit">
+        <div class="number" id="hours">24</div>
+        <div class="unit-label">HOURS</div>
+      </div>
+
+      <div class="unit">
+        <div class="number" id="minutes">00</div>
+        <div class="unit-label">MINUTES</div>
+      </div>
+
+      <div class="unit">
+        <div class="number" id="seconds">00</div>
+        <div class="unit-label">SECONDS</div>
+      </div>
+
+    </div>
+
+    <div class="release">
+
+      <div>
+        RELEASE //
+        <strong>
+          <span>23 SEPTEMBER 2026 · 21:30</span>
+        </strong>
+      </div>
+
+      <div>
+        COPENHAGEN // UTC+02:00
+      </div>
+
+    </div>
+
+    <div class="footer" id="footer">
+      UNAUTHORIZED ACCESS PROHIBITED //
+      AUTOMATIC DISCLOSURE PROTOCOL ARMED.
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+
+/*
+  SUBJECT BLOB COUNTDOWN
+
+  Countdown begins:
+  22 September 2026 at 21:30 Copenhagen time
+
+  Reveal:
+  23 September 2026 at 21:30 Copenhagen time
+*/
+
+const START =
+  new Date("2026-09-22T21:30:00+02:00").getTime();
+
+const END =
+  new Date("2026-09-23T21:30:00+02:00").getTime();
+
+
+function pad(number) {
+  return String(number).padStart(2, "0");
+}
+
+
+function updateCountdown() {
+
+  const now = Date.now();
+
+  /*
+    Before the countdown starts,
+    show the full 24 hours.
+  */
+
+  if (now < START) {
+
+    document.getElementById("hours").textContent = "24";
+    document.getElementById("minutes").textContent = "00";
+    document.getElementById("seconds").textContent = "00";
+
+    return;
+  }
+
+
+  /*
+    After the reveal time,
+    change the page into the revealed state.
+  */
+
+  if (now >= END) {
+
+    document.getElementById("hours").textContent = "00";
+    document.getElementById("minutes").textContent = "00";
+    document.getElementById("seconds").textContent = "00";
+
+    document.getElementById("title").innerHTML =
+      "THE SUBJECT <span>HAS A NAME</span>";
+
+    document.getElementById("subtitle").textContent =
+      "The waiting is over. The classified identity has been cleared for release.";
+
+    document.getElementById("subjectLabel").innerHTML =
+      "NAME REVEALED<small>SUBJECT 001 // CLEARED</small>";
+
+    document.getElementById("timerTitle").textContent =
+      "DISCLOSURE COMPLETE";
+
+    document.getElementById("footer").textContent =
+      "PROTOCOL COMPLETE // SUBJECT IDENTITY DISCLOSED.";
+
+    document.getElementById("panel")
+      .classList.add("revealed");
+
+    return;
+  }
+
+
+  /*
+    Normal countdown.
+  */
+
+  const remaining = END - now;
+
+  const totalSeconds =
+    Math.floor(remaining / 1000);
+
+  const hours =
+    Math.floor(totalSeconds / 3600);
+
+  const minutes =
+    Math.floor((totalSeconds % 3600) / 60);
+
+  const seconds =
+    totalSeconds % 60;
+
+
+  document.getElementById("hours").textContent =
+    pad(hours);
+
+  document.getElementById("minutes").textContent =
+    pad(minutes);
+
+  document.getElementById("seconds").textContent =
+    pad(seconds);
+}
+
+
+updateCountdown();
+
+setInterval(updateCountdown, 250);
+
+</script>
+
+</body>
+</html>
